@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * Button / ButtonLink — Actions with consistent styling.
+ * Variants: primary (coral), secondary (slate), outline (border only).
+ * Sizes: sm, md, lg. Optional iconLeft / iconRight for icons.
+ */
 type Variant = "primary" | "secondary" | "outline";
 type Size = "sm" | "md" | "lg";
 

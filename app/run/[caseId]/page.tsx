@@ -9,6 +9,10 @@ type Params = {
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Run page — Entry point for a candidate simulation. Loads the case and creates
+ * a new CandidateSession, then renders CandidateWorkspace (tickets, triage, responses, etc.).
+ */
 export default async function RunCasePage({ params }: Params) {
   const { caseId } = await params;
 
@@ -21,6 +25,7 @@ export default async function RunCasePage({ params }: Params) {
     notFound();
   }
 
+  // One new session per visit; candidate progress is saved in this session
   const session = await prisma.candidateSession.create({
     data: {
       caseId: caseData.id,

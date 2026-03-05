@@ -12,6 +12,11 @@ type Params = {
 
 export const dynamic = "force-dynamic";
 
+/**
+ * Dashboard page — Analytics for a single session. Shows overview metrics,
+ * scores (after "Compute score"), and session details. Compute score calls
+ * the scoring API and revalidates so the new score appears.
+ */
 export default async function DashboardPage({ params }: Params) {
   const { sessionId } = await params;
 
@@ -27,6 +32,7 @@ export default async function DashboardPage({ params }: Params) {
     notFound();
   }
 
+  /** Calls POST /api/score/:sessionId then revalidates this page */
   async function computeScore() {
     "use server";
     const base =

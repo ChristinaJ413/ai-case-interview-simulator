@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { inputClass, labelClass } from "@/components/ui/Input";
 
+/** Steps shown in the stepper; lastChangeStep tracks which the user last interacted with */
 type Step = "triage" | "respond" | "escalate" | "summarize" | "workspace";
 
 const STEPS: { id: Step; label: string }[] = [
@@ -27,6 +28,7 @@ function wordCount(text: string): number {
   return text.trim() ? text.trim().split(/\s+/).length : 0;
 }
 
+/** Persist session state and optionally append an event to the event_log */
 async function saveSession(
   sessionId: string,
   payload: {
@@ -47,6 +49,11 @@ async function saveSession(
   return res.json();
 }
 
+/**
+ * CandidateWorkspace — Main simulation UI: tickets list, prioritization, escalations,
+ * ticket detail + response editor, and internal summary. Saves via PUT /api/sessions/:id.
+ * Sticky bottom bar: Save progress (outline) + Finish & view dashboard (primary).
+ */
 export function CandidateWorkspace({
   sessionId,
   caseData,
@@ -116,7 +123,7 @@ export function CandidateWorkspace({
           },
         },
       });
-      setLastSavedAt(new Date());
+      setLastSavedAt(new Date()); // Show "Last saved HH:MM" in the bar
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : "Save failed");
     } finally {
@@ -139,7 +146,7 @@ export function CandidateWorkspace({
           metadata: {},
         },
       });
-      window.location.href = `/dashboard/${sessionId}`;
+      window.location.href = `/dashboard/${sessionId}`; // Full nav so server sees updated session
     } catch (e) {
       setSaveError(e instanceof Error ? e.message : "Finish failed");
       setFinishing(false);
@@ -148,6 +155,7 @@ export function CandidateWorkspace({
 
   return (
     <>
+      {/* Stepper: shows which step the user last touched (active = coral) */}
       <div className="mb-4 flex flex-wrap items-center gap-2">
         {STEPS.map((step) => (
           <Badge
@@ -161,6 +169,7 @@ export function CandidateWorkspace({
         ))}
       </div>
 
+      {/* Three columns: tickets | prioritization + escalations | detail + editors */}
       <div className="grid gap-4 pb-28 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,2fr)] md:pb-4">
         <div className="flex max-h-[420px] flex-col md:max-h-none">
           <TicketList
@@ -303,6 +312,7 @@ export function CandidateWorkspace({
         </div>
       </div>
 
+      {/* Sticky action bar on mobile; inline on desktop */}
       <div className="fixed bottom-0 left-0 right-0 z-10 border-t border-brand-silver/60 bg-white/95 px-4 py-3 backdrop-blur sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:z-0 sm:mt-6 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-3">

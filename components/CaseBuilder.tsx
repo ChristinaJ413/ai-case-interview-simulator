@@ -6,12 +6,18 @@ import type { Case } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
 import { inputClass, labelClass } from "@/components/ui/Input";
 
+/**
+ * CaseBuilder — Form for editing case metadata (title, description, context, policies).
+ * Submits to a Next.js server action. Uses hidden "id" when editing an existing case
+ * so the server can update instead of create.
+ */
 type Props = {
   initialCase?: Case | null;
   onSave: (formData: FormData) => Promise<void>;
   saved?: boolean;
 };
 
+/** Shows pending state while the form is submitting (no JS needed for the action). */
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
@@ -24,10 +30,12 @@ function SubmitButton() {
 export function CaseBuilder({ initialCase, onSave, saved = false }: Props) {
   return (
     <form action={onSave} className="space-y-8">
+      {/* Server uses "id" to decide update vs create */}
       {initialCase?.id && (
         <input type="hidden" name="id" value={initialCase.id} readOnly />
       )}
 
+      {/* Section 1: Core scenario for the candidate */}
       <section>
         <h2 className="text-lg font-semibold text-brand-black">Scenario</h2>
         <p className="mt-0.5 text-sm text-brand-slate/80">
@@ -56,6 +64,7 @@ export function CaseBuilder({ initialCase, onSave, saved = false }: Props) {
         </div>
       </section>
 
+      {/* Section 2: Company background */}
       <section>
         <h2 className="text-lg font-semibold text-brand-black">
           Company context
@@ -74,6 +83,7 @@ export function CaseBuilder({ initialCase, onSave, saved = false }: Props) {
         </div>
       </section>
 
+      {/* Section 3: Policy text */}
       <section>
         <h2 className="text-lg font-semibold text-brand-black">Policies</h2>
         <p className="mt-0.5 text-sm text-brand-slate/80">
@@ -90,6 +100,7 @@ export function CaseBuilder({ initialCase, onSave, saved = false }: Props) {
         </div>
       </section>
 
+      {/* Footer: save button + brief "Saved" feedback after redirect */}
       <div className="flex flex-wrap items-center gap-3 border-t border-brand-silver/60 pt-6">
         <SubmitButton />
         {saved && (

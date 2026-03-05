@@ -1,5 +1,9 @@
 import React from "react";
 
+/**
+ * Badge — Small pill for severity (high/medium/low), metadata (muted),
+ * or stepper state (stepper-active = coral, stepper-inactive = slate).
+ */
 type BadgeVariant =
   | "high"
   | "medium"

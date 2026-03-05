@@ -3,6 +3,11 @@ import type { Ticket } from "@/lib/types";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 
+/**
+ * TicketList — Scrollable list of tickets for the current case.
+ * Each row shows subject, channel/tier/SLA as muted badges, and severity (coral/slate/silver).
+ * Selected ticket gets a left border accent and light background.
+ */
 type Props = {
   tickets: Ticket[];
   selectedId?: string | null;
@@ -35,6 +40,7 @@ export function TicketList({ tickets, selectedId, onSelect }: Props) {
           return (
             <li key={t.id}>
               <button
+                aria-pressed={isSelected}
                 type="button"
                 onClick={() => onSelect?.(t.id)}
                 className={`relative flex w-full flex-col gap-1.5 rounded-xl border-l-4 px-3 py-2.5 text-left transition-colors hover:bg-brand-silver/20 ${

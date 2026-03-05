@@ -1,5 +1,13 @@
 import React from "react";
 
+/**
+ * AppShell — Shared page layout for the app.
+ * Wraps content in a max-width container with a consistent header:
+ * - Optional breadcrumb above the title
+ * - Page title and subtitle on the left
+ * - Optional actions (e.g. buttons) on the right
+ * - Optional toolbar row below (e.g. stepper, filters)
+ */
 type AppShellProps = {
   title: string;
   subtitle?: string;
@@ -25,6 +33,7 @@ export function AppShell({
         className={`mx-auto max-w-6xl px-6 py-8 md:py-10 ${fullWidth ? "" : ""}`}
       >
         <header className="border-b border-brand-silver/60 pb-6">
+          {/* Left: breadcrumb + title + subtitle. Right: actions */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
               {breadcrumb && (
@@ -47,6 +56,7 @@ export function AppShell({
               </div>
             )}
           </div>
+          {/* Optional second row: stepper, filters, etc. */}
           {toolbar && (
             <div className="mt-4 flex flex-wrap items-center gap-2">
               {toolbar}

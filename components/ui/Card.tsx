@@ -1,5 +1,10 @@
 import React from "react";
 
+/**
+ * Card — Container with rounded corners and padding.
+ * default: white background, border, soft shadow.
+ * subtle: same but no shadow (for nested or low-emphasis blocks).
+ */
 type CardVariant = "default" | "subtle";
 
 type CardProps = React.HTMLAttributes<HTMLDivElement> & {

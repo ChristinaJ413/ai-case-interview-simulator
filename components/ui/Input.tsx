@@ -1,6 +1,9 @@
 import React from "react";
 
-/** Shared input/textarea styling — use in classNames or wrap in tiny components */
+/**
+ * Input / Textarea — Shared form styling. Export inputClass and labelClass
+ * for use in custom forms, or use <Input /> / <Textarea /> with optional label and error.
+ */
 export const inputClass =
   "w-full rounded-xl border border-brand-silver/70 bg-brand-white px-3 py-2 text-sm text-brand-black placeholder:text-brand-slate/70 focus:ring-2 focus:ring-brand-coral focus:border-brand-coral focus:outline-none hover:border-brand-silver transition-colors";
 export const labelClass = "block text-sm font-medium text-brand-black";

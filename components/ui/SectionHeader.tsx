@@ -1,5 +1,8 @@
 import React from "react";
 
+/**
+ * SectionHeader — Section title with optional description and right-aligned actions.
+ */
 type SectionHeaderProps = {
   title: string;
   description?: string;

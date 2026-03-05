@@ -39,6 +39,7 @@ export async function PUT(request: Request, { params }: Context) {
     event,
   } = body;
 
+  // Only update fields that were sent (partial update)
   const data: Record<string, unknown> = {};
   if (priority_ranking !== undefined) data.priority_ranking = priority_ranking;
   if (escalations !== undefined) data.escalations = escalations;

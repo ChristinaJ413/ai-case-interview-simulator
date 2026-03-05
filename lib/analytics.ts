@@ -6,7 +6,10 @@ export type SessionMetrics = {
   firstActionSeconds: number | null;
 };
 
-// Compute simple metrics derived from a session and its event_log.
+/**
+ * Compute metrics from a session: duration (if ended), event count,
+ * and time from start to first event in event_log.
+ */
 export function computeSessionMetrics(
   session: CandidateSession,
   _caseData: Case,

@@ -12,7 +12,12 @@ type PageProps = {
   searchParams?: Promise<{ saved?: string }> | { saved?: string };
 };
 
+/**
+ * Builder page — Admin view to create/edit a case and start a simulation.
+ * Two-column layout: main form (left) + sidebar with summary and "Run simulation" (right).
+ */
 export default async function BuilderPage({ searchParams }: PageProps) {
+  // Show "Saved" when redirected back with ?saved=1 after save
   const resolved = await Promise.resolve(searchParams ?? {}).then((s) => s);
   const saved = resolved?.saved === "1";
 
@@ -21,6 +26,7 @@ export default async function BuilderPage({ searchParams }: PageProps) {
     include: { tickets: true },
   });
 
+  /** Server action: create or update case from form data, then redirect with ?saved=1 */
   async function saveCase(formData: FormData) {
     "use server";
 
@@ -58,6 +64,7 @@ export default async function BuilderPage({ searchParams }: PageProps) {
     redirect("/builder?saved=1");
   }
 
+  // For sidebar: ticket count and last updated date
   const ticketCount = existingCase?.tickets?.length ?? 0;
   const lastUpdated = existingCase?.updatedAt
     ? new Date(existingCase.updatedAt).toLocaleDateString(undefined, {
@@ -73,6 +80,7 @@ export default async function BuilderPage({ searchParams }: PageProps) {
       subtitle="Define the scenario a candidate will work through. Tickets are pre-seeded; focus on high-level context."
     >
       <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+        {/* Main: case form */}
         <div className="min-w-0">
           <Card className="sticky top-6">
             <CaseBuilder
@@ -82,6 +90,7 @@ export default async function BuilderPage({ searchParams }: PageProps) {
             />
           </Card>
         </div>
+        {/* Sidebar: summary + Run simulation CTA */}
         <aside className="lg:sticky lg:top-6 lg:self-start">
           <Card variant="subtle">
             <h2 className="text-lg font-semibold text-brand-black">

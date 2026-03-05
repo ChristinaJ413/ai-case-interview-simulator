@@ -1,6 +1,10 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { ButtonLink } from "@/components/ui/Button";
 
+/**
+ * Home — Landing page. Centered hero card with title, subtitle, two CTAs
+ * (Open Case Builder + View demo flow), and a "How it works" 3-step list.
+ */
 export default function Home() {
   return (
     <div className="min-h-screen bg-brand-silver/15 flex items-center justify-center px-6 py-10">

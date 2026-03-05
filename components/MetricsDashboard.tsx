@@ -1,7 +1,7 @@
 import React from "react";
 import type { CandidateSession, Case, ScoreResult } from "@/lib/types";
 import { computeSessionMetrics } from "@/lib/analytics";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card";
 
 type Props = {
   caseData: Case;
@@ -9,10 +9,17 @@ type Props = {
   score?: ScoreResult | null;
 };
 
+/** Session dates may be Date (from Prisma) or string (after serialization) */
 function formatDate(d: Date | string): string {
   return typeof d === "string" ? d : d.toISOString();
 }
 
+/**
+ * MetricsDashboard — Analytics view for a completed session.
+ * Overview: duration, time to first action, event count.
+ * Scores: total (highlighted) + prioritization, escalation, policy violations, response quality.
+ * Session details: case name, session ID, started/ended.
+ */
 export function MetricsDashboard({ caseData, session, score }: Props) {
   const metrics = computeSessionMetrics(session, caseData);
 
@@ -23,6 +30,7 @@ export function MetricsDashboard({ caseData, session, score }: Props) {
         <p className="mt-0.5 text-sm text-brand-slate/80">
           Timing and activity for this run.
         </p>
+        {/* Three metric cards */}
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <Card variant="subtle">
             <dt className="text-sm text-brand-slate/80">Duration</dt>
@@ -56,6 +64,7 @@ export function MetricsDashboard({ caseData, session, score }: Props) {
         </p>
         {score ? (
           <>
+            {/* Hero card: total score in coral */}
             <Card className="mt-4 flex flex-row flex-wrap items-center justify-between gap-6 bg-brand-coral/5 border-brand-coral/30">
               <div>
                 <dt className="text-sm text-brand-slate/80">Total score</dt>
@@ -67,6 +76,7 @@ export function MetricsDashboard({ caseData, session, score }: Props) {
                 Combined prioritization, escalation, and policy adherence.
               </p>
             </Card>
+            {/* Breakdown: four score cards */}
             <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <Card variant="subtle">
                 <dt className="text-sm text-brand-slate/80">Prioritization</dt>
