@@ -1,0 +1,81 @@
+// Prisma schema for AI case interview simulator prototype
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Case {
+  id                  String             @id @default(cuid())
+  title               String
+  description         String
+  company_context     String
+  policies            String
+  tickets             Ticket[]
+  expected_priority   Json               // array of Ticket IDs (JSON for SQLite)
+  expected_escalations Json               // array of Ticket IDs (JSON for SQLite)
+  rubric              Json
+  sessions            CandidateSession[]
+
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+}
+
+model Ticket {
+  id            String       @id @default(cuid())
+  caseId        String
+  case          Case         @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  subject       String
+  body          String
+  severity      Severity
+  customer_tier CustomerTier
+  channel       Channel
+  sla_hours     Int
+}
+
+model CandidateSession {
+  id               String   @id @default(cuid())
+  caseId           String
+  case             Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  start_time       DateTime @default(now())
+  end_time         DateTime?
+  priority_ranking Json     // string[] of ticket IDs
+  escalations      Json     // string[] of ticket IDs
+  responses        Json     // { [ticketId]: string }
+  internal_summary String?
+  event_log        Json     // Event[]
+
+  scoreResult      ScoreResult?
+}
+
+model ScoreResult {
+  sessionId              String          @id
+  session                CandidateSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  prioritization_score   Int
+  escalation_score       Int
+  policy_violations      Int
+  response_quality_score Int
+  total_score            Int
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum CustomerTier {
+  STANDARD
+  PREMIUM
+  ENTERPRISE
+}
+
+enum Channel {
+  EMAIL
+  CHAT
+}
+
