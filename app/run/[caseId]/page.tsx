@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { CandidateWorkspace } from "@/components/CandidateWorkspace";
+import { AppShell } from "@/components/AppShell";
 
 type Params = {
   params: Promise<{ caseId: string }>;
@@ -31,22 +32,18 @@ export default async function RunCasePage({ params }: Params) {
   });
 
   return (
-    <div className="mx-auto max-w-6xl space-y-4 px-4 py-6">
-      <header>
-        <h1 className="text-xl font-semibold text-gray-900">
-          Candidate workspace
-        </h1>
-        <p className="text-sm text-gray-600">
-          Triage, respond, escalate, and summarize this case. Save progress, then
-          click Finish & view dashboard when done.
-        </p>
-      </header>
-
-      <CandidateWorkspace
-        sessionId={session.id}
-        caseData={caseData}
-        session={session}
-      />
-    </div>
+    <AppShell
+      title="Candidate Workspace"
+      subtitle="Triage, respond, escalate, and summarize this case. Save progress, then click Finish & view dashboard when done."
+      fullWidth
+    >
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-1">
+        <CandidateWorkspace
+          sessionId={session.id}
+          caseData={caseData}
+          session={session}
+        />
+      </div>
+    </AppShell>
   );
 }

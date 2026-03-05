@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { CaseBuilder } from "@/components/CaseBuilder";
+import { AppShell } from "@/components/AppShell";
+import { Card } from "@/components/ui/Card";
+import { ButtonLink } from "@/components/ui/Button";
 
 export const dynamic = "force-dynamic";
 
@@ -55,34 +58,28 @@ export default async function BuilderPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6 px-4 py-8">
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">
-            Case Builder
-          </h1>
-          <p className="text-sm text-gray-600">
-            Define the scenario a candidate will work through. Tickets are
-            pre-seeded in this prototype; focus on high-level context.
-          </p>
-        </div>
-        {existingCase && (
-          <a
+    <AppShell
+      title="Case Builder"
+      subtitle="Define the scenario a candidate will work through. Tickets are pre-seeded; focus on high-level context."
+      actions={
+        existingCase ? (
+          <ButtonLink
             href={`/run/${existingCase.id}`}
-            className="rounded-md bg-black px-3 py-1.5 text-sm font-medium text-white"
+            variant="secondary"
+            size="sm"
           >
             Run simulation
-          </a>
-        )}
-      </header>
-
-      <div>
+          </ButtonLink>
+        ) : null
+      }
+    >
+      <Card>
         <CaseBuilder
           initialCase={existingCase ?? undefined}
           onSave={saveCase}
           saved={saved}
         />
-      </div>
-    </div>
+      </Card>
+    </AppShell>
   );
 }

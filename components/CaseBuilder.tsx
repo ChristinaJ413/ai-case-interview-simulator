@@ -3,6 +3,7 @@
 import React from "react";
 import { useFormStatus } from "react-dom";
 import type { Case } from "@/lib/types";
+import { Button } from "@/components/ui/Button";
 
 type Props = {
   initialCase?: Case | null;
@@ -12,44 +13,38 @@ type Props = {
   saved?: boolean;
 };
 
+const inputClass =
+  "mt-2 w-full rounded-xl border border-brand-silver bg-brand-white px-3 py-2 text-sm text-brand-black placeholder:opacity-70 focus:ring-2 focus:ring-brand-coral focus:border-brand-coral focus:outline-none";
+const labelClass = "block text-sm font-medium text-brand-black";
+
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-md bg-black px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
-    >
+    <Button type="submit" variant="primary" size="md" disabled={pending}>
       {pending ? "Saving..." : "Save Case"}
-    </button>
+    </Button>
   );
 }
 
-// Form that submits to the passed server action. Uses defaultValue so seeded data appears and can be edited.
 export function CaseBuilder({ initialCase, onSave, saved = false }: Props) {
   return (
-    <form
-      action={onSave}
-      className="space-y-4 rounded-lg border bg-white p-4 shadow-sm"
-    >
+    <form action={onSave} className="space-y-6">
       {initialCase?.id && (
         <input type="hidden" name="id" value={initialCase.id} readOnly />
       )}
       <div>
-        <label className="block text-sm font-medium text-gray-700">Title</label>
+        <label className={labelClass}>Title</label>
         <input
-          className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
+          className={inputClass}
           name="title"
           defaultValue={initialCase?.title ?? ""}
           required
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Description
-        </label>
+        <label className={labelClass}>Description</label>
         <textarea
-          className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
+          className={inputClass}
           name="description"
           rows={3}
           defaultValue={initialCase?.description ?? ""}
@@ -57,35 +52,31 @@ export function CaseBuilder({ initialCase, onSave, saved = false }: Props) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Company context
-        </label>
+        <label className={labelClass}>Company context</label>
         <textarea
-          className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
+          className={inputClass}
           name="company_context"
           rows={3}
           defaultValue={initialCase?.company_context ?? ""}
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Policies
-        </label>
+        <label className={labelClass}>Policies</label>
         <textarea
-          className="mt-1 w-full rounded-md border px-3 py-2 text-sm"
+          className={inputClass}
           name="policies"
           rows={3}
           defaultValue={initialCase?.policies ?? ""}
         />
-        <p className="mt-1 text-xs text-gray-500">
+        <p className="mt-1.5 text-xs text-brand-slate">
           Freeform text. In future we can attach structured policy documents and
           AI evaluation.
         </p>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3 pt-2">
         <SubmitButton />
         {saved && (
-          <span className="text-sm text-green-600">Saved.</span>
+          <span className="text-sm font-medium text-brand-coral">Saved.</span>
         )}
       </div>
     </form>
