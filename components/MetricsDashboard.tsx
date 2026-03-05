@@ -9,133 +9,135 @@ type Props = {
   score?: ScoreResult | null;
 };
 
+function formatDate(d: Date | string): string {
+  return typeof d === "string" ? d : d.toISOString();
+}
+
 export function MetricsDashboard({ caseData, session, score }: Props) {
   const metrics = computeSessionMetrics(session, caseData);
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Overview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="mb-3 text-xs text-brand-slate">
-            Basic timing and activity metrics for this simulation run.
-          </p>
-          <dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-            <div>
-              <dt className="text-sm text-brand-slate">Duration</dt>
-              <dd className="text-2xl font-semibold text-brand-black">
-                {metrics.durationSeconds != null
-                  ? `${metrics.durationSeconds}s`
-                  : "—"}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-brand-slate">Event count</dt>
-              <dd className="text-2xl font-semibold text-brand-black">
-                {metrics.eventCount}
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm text-brand-slate">Time to first action</dt>
-              <dd className="text-2xl font-semibold text-brand-black">
-                {metrics.firstActionSeconds != null
-                  ? `${metrics.firstActionSeconds}s`
-                  : "—"}
-              </dd>
-            </div>
-          </dl>
-        </CardContent>
-      </Card>
+    <div className="space-y-8">
+      <section>
+        <h2 className="text-lg font-semibold text-brand-black">Overview</h2>
+        <p className="mt-0.5 text-sm text-brand-slate/80">
+          Timing and activity for this run.
+        </p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <Card variant="subtle">
+            <dt className="text-sm text-brand-slate/80">Duration</dt>
+            <dd className="mt-1 text-2xl font-semibold text-brand-black">
+              {metrics.durationSeconds != null
+                ? `${metrics.durationSeconds}s`
+                : "—"}
+            </dd>
+          </Card>
+          <Card variant="subtle">
+            <dt className="text-sm text-brand-slate/80">Time to first action</dt>
+            <dd className="mt-1 text-2xl font-semibold text-brand-black">
+              {metrics.firstActionSeconds != null
+                ? `${metrics.firstActionSeconds}s`
+                : "—"}
+            </dd>
+          </Card>
+          <Card variant="subtle">
+            <dt className="text-sm text-brand-slate/80">Event count</dt>
+            <dd className="mt-1 text-2xl font-semibold text-brand-black">
+              {metrics.eventCount}
+            </dd>
+          </Card>
+        </div>
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Scores</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="mb-3 text-xs text-brand-slate">
-            Simple rule-based scoring. In a production system this would be
-            replaced or augmented with AI-based scoring.
-          </p>
-          {score ? (
-            <>
-              <div className="mb-4 rounded-xl bg-brand-coral/10 px-4 py-3">
-                <dt className="text-sm text-brand-slate">Total score</dt>
-                <dd className="text-3xl font-semibold text-brand-coral">
+      <section>
+        <h2 className="text-lg font-semibold text-brand-black">Scores</h2>
+        <p className="mt-0.5 text-sm text-brand-slate/80">
+          Rule-based scoring. Replace or augment with AI in production.
+        </p>
+        {score ? (
+          <>
+            <Card className="mt-4 flex flex-row flex-wrap items-center justify-between gap-6 bg-brand-coral/5 border-brand-coral/30">
+              <div>
+                <dt className="text-sm text-brand-slate/80">Total score</dt>
+                <dd className="mt-1 text-4xl font-semibold text-brand-coral">
                   {score.total_score}
                 </dd>
               </div>
-              <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                <div>
-                  <dt className="text-sm text-brand-slate">Prioritization</dt>
-                  <dd className="text-2xl font-semibold text-brand-black">
-                    {score.prioritization_score}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-brand-slate">Escalation</dt>
-                  <dd className="text-2xl font-semibold text-brand-black">
-                    {score.escalation_score}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-brand-slate">Policy violations</dt>
-                  <dd className="text-2xl font-semibold text-brand-black">
-                    {score.policy_violations}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-sm text-brand-slate">Response quality</dt>
-                  <dd className="text-2xl font-semibold text-brand-black">
-                    {score.response_quality_score}
-                  </dd>
-                </div>
-              </dl>
-            </>
-          ) : (
-            <p className="text-sm text-brand-slate">
-              No score computed yet. Use the dashboard action to compute it.
+              <p className="max-w-xs text-sm text-brand-slate/80">
+                Combined prioritization, escalation, and policy adherence.
+              </p>
+            </Card>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <Card variant="subtle">
+                <dt className="text-sm text-brand-slate/80">Prioritization</dt>
+                <dd className="mt-1 text-xl font-semibold text-brand-black">
+                  {score.prioritization_score}
+                </dd>
+              </Card>
+              <Card variant="subtle">
+                <dt className="text-sm text-brand-slate/80">Escalation</dt>
+                <dd className="mt-1 text-xl font-semibold text-brand-black">
+                  {score.escalation_score}
+                </dd>
+              </Card>
+              <Card variant="subtle">
+                <dt className="text-sm text-brand-slate/80">Policy violations</dt>
+                <dd className="mt-1 text-xl font-semibold text-brand-black">
+                  {score.policy_violations}
+                </dd>
+              </Card>
+              <Card variant="subtle">
+                <dt className="text-sm text-brand-slate/80">Response quality</dt>
+                <dd className="mt-1 text-xl font-semibold text-brand-black">
+                  {score.response_quality_score}
+                </dd>
+              </Card>
+            </div>
+          </>
+        ) : (
+          <Card variant="subtle" className="mt-4">
+            <p className="text-sm text-brand-slate/80">
+              No score yet. Click &quot;Compute score&quot; above.
             </p>
-          )}
-        </CardContent>
-      </Card>
+          </Card>
+        )}
+      </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Session details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <dl className="space-y-1 text-xs text-brand-slate">
+      <section>
+        <h2 className="text-lg font-semibold text-brand-black">
+          Session details
+        </h2>
+        <Card variant="subtle" className="mt-4">
+          <dl className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
             <div>
-              <dt className="inline font-medium text-brand-black">Case:</dt>{" "}
-              <dd className="inline">{caseData.title}</dd>
+              <dt className="text-xs font-medium uppercase tracking-wide text-brand-slate/80">Case</dt>
+              <dd className="mt-0.5 text-sm font-medium text-brand-black">
+                {caseData.title}
+              </dd>
             </div>
             <div>
-              <dt className="inline font-medium text-brand-black">Session ID:</dt>{" "}
-              <dd className="inline font-mono">{session.id}</dd>
+              <dt className="text-xs font-medium uppercase tracking-wide text-brand-slate/80">Session ID</dt>
+              <dd className="mt-0.5 font-mono text-sm text-brand-black">
+                {session.id}
+              </dd>
             </div>
             <div>
-              <dt className="inline font-medium text-brand-black">Started:</dt>{" "}
-              <dd className="inline">
-                {typeof session.start_time === "string"
-                  ? session.start_time
-                  : session.start_time.toISOString()}
+              <dt className="text-xs font-medium uppercase tracking-wide text-brand-slate/80">Started</dt>
+              <dd className="mt-0.5 text-sm text-brand-black">
+                {formatDate(session.start_time)}
               </dd>
             </div>
             {session.end_time && (
               <div>
-                <dt className="inline font-medium text-brand-black">Ended:</dt>{" "}
-                <dd className="inline">
-                  {typeof session.end_time === "string"
-                    ? session.end_time
-                    : session.end_time.toISOString()}
+                <dt className="text-xs font-medium uppercase tracking-wide text-brand-slate/80">Ended</dt>
+                <dd className="mt-0.5 text-sm text-brand-black">
+                  {formatDate(session.end_time)}
                 </dd>
               </div>
             )}
           </dl>
-        </CardContent>
-      </Card>
+        </Card>
+      </section>
     </div>
   );
 }

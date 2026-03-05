@@ -1,11 +1,26 @@
 import React from "react";
 
-type CardProps = React.HTMLAttributes<HTMLDivElement>;
+type CardVariant = "default" | "subtle";
 
-export function Card({ className = "", ...props }: CardProps) {
+type CardProps = React.HTMLAttributes<HTMLDivElement> & {
+  variant?: CardVariant;
+};
+
+const variantClasses: Record<CardVariant, string> = {
+  default:
+    "bg-brand-white border-brand-silver/60 shadow-soft",
+  subtle:
+    "bg-brand-white border-brand-silver/60",
+};
+
+export function Card({
+  variant = "default",
+  className = "",
+  ...props
+}: CardProps) {
   return (
     <div
-      className={`rounded-xl border border-brand-silver/40 bg-brand-white p-5 shadow-soft ${className}`}
+      className={`rounded-xl border p-5 ${variantClasses[variant]} ${className}`}
       {...props}
     />
   );
@@ -24,7 +39,7 @@ export function CardTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h2
-      className={`text-sm font-semibold text-brand-black ${className}`}
+      className={`text-lg font-semibold text-brand-black ${className}`}
       {...props}
     />
   );
@@ -34,5 +49,7 @@ export function CardContent({
   className = "",
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={`text-sm text-brand-slate ${className}`} {...props} />;
+  return (
+    <div className={`text-sm md:text-base text-brand-slate ${className}`} {...props} />
+  );
 }

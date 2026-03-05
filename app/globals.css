@@ -41,7 +41,7 @@ select:focus-visible {
   outline-offset: 2px;
 }
 
-a:hover,
+a:hover:not([aria-disabled="true"]),
 button:hover:not(:disabled) {
   opacity: 0.92;
 }

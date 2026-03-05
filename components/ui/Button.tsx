@@ -1,7 +1,7 @@
 import React from "react";
 
 type Variant = "primary" | "secondary" | "outline";
-type Size = "sm" | "md";
+type Size = "sm" | "md" | "lg";
 
 const variantClasses: Record<Variant, string> = {
   primary:
@@ -13,20 +13,24 @@ const variantClasses: Record<Variant, string> = {
 };
 
 const sizeClasses: Record<Size, string> = {
-  sm: "px-3 py-1.5 text-sm",
-  md: "px-4 py-2 text-sm",
+  sm: "h-8 px-3 text-sm gap-1.5",
+  md: "h-10 px-4 text-sm gap-2",
+  lg: "h-11 px-5 text-base gap-2",
 };
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: Variant;
   size?: Size;
-  asChild?: false;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
 };
 
 type AnchorProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   variant?: Variant;
   size?: Size;
-  asChild?: false;
+  iconLeft?: React.ReactNode;
+  iconRight?: React.ReactNode;
+  href: string;
 };
 
 export function Button({
@@ -34,6 +38,8 @@ export function Button({
   size = "md",
   className = "",
   children,
+  iconLeft,
+  iconRight,
   ...props
 }: ButtonProps) {
   return (
@@ -42,7 +48,9 @@ export function Button({
       className={`inline-flex items-center justify-center font-medium rounded-xl border focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ${variant === "outline" ? "" : "border-transparent"} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
+      {iconLeft && <span className="shrink-0">{iconLeft}</span>}
       {children}
+      {iconRight && <span className="shrink-0">{iconRight}</span>}
     </button>
   );
 }
@@ -53,15 +61,19 @@ export function ButtonLink({
   className = "",
   href,
   children,
+  iconLeft,
+  iconRight,
   ...props
-}: AnchorProps & { href: string }) {
+}: AnchorProps) {
   return (
     <a
       href={href}
-      className={`inline-flex items-center justify-center font-medium rounded-xl border border-transparent focus-visible:ring-2 focus-visible:ring-offset-2 ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={`inline-flex items-center justify-center font-medium rounded-xl border focus-visible:ring-2 focus-visible:ring-offset-2 hover:opacity-92 ${variant === "outline" ? "" : "border-transparent"} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
       {...props}
     >
+      {iconLeft && <span className="shrink-0">{iconLeft}</span>}
       {children}
+      {iconRight && <span className="shrink-0">{iconRight}</span>}
     </a>
   );
 }

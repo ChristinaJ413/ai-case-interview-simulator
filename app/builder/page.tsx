@@ -18,6 +18,7 @@ export default async function BuilderPage({ searchParams }: PageProps) {
 
   const existingCase = await prisma.case.findFirst({
     orderBy: { createdAt: "desc" },
+    include: { tickets: true },
   });
 
   async function saveCase(formData: FormData) {
@@ -57,29 +58,70 @@ export default async function BuilderPage({ searchParams }: PageProps) {
     redirect("/builder?saved=1");
   }
 
+  const ticketCount = existingCase?.tickets?.length ?? 0;
+  const lastUpdated = existingCase?.updatedAt
+    ? new Date(existingCase.updatedAt).toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : null;
+
   return (
     <AppShell
       title="Case Builder"
       subtitle="Define the scenario a candidate will work through. Tickets are pre-seeded; focus on high-level context."
-      actions={
-        existingCase ? (
-          <ButtonLink
-            href={`/run/${existingCase.id}`}
-            variant="secondary"
-            size="sm"
-          >
-            Run simulation
-          </ButtonLink>
-        ) : null
-      }
     >
-      <Card>
-        <CaseBuilder
-          initialCase={existingCase ?? undefined}
-          onSave={saveCase}
-          saved={saved}
-        />
-      </Card>
+      <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+        <div className="min-w-0">
+          <Card className="sticky top-6">
+            <CaseBuilder
+              initialCase={existingCase ?? undefined}
+              onSave={saveCase}
+              saved={saved}
+            />
+          </Card>
+        </div>
+        <aside className="lg:sticky lg:top-6 lg:self-start">
+          <Card variant="subtle">
+            <h2 className="text-lg font-semibold text-brand-black">
+              Simulation summary
+            </h2>
+            <dl className="mt-4 space-y-3 text-sm">
+              <div>
+                <dt className="text-brand-slate/80">Case name</dt>
+                <dd className="mt-0.5 font-medium text-brand-black">
+                  {existingCase?.title ?? "—"}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-brand-slate/80">Tickets</dt>
+                <dd className="mt-0.5 font-medium text-brand-black">
+                  {ticketCount}
+                </dd>
+              </div>
+              {lastUpdated && (
+                <div>
+                  <dt className="text-brand-slate/80">Last updated</dt>
+                  <dd className="mt-0.5 font-medium text-brand-black">
+                    {lastUpdated}
+                  </dd>
+                </div>
+              )}
+            </dl>
+            <div className="mt-6">
+              <ButtonLink
+                href={existingCase ? `/run/${existingCase.id}` : "/builder"}
+                variant="primary"
+                size="md"
+                className="w-full"
+              >
+                Run simulation
+              </ButtonLink>
+            </div>
+          </Card>
+        </aside>
+      </div>
     </AppShell>
   );
 }

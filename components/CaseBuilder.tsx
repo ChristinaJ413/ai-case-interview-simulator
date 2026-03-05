@@ -4,18 +4,13 @@ import React from "react";
 import { useFormStatus } from "react-dom";
 import type { Case } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
+import { inputClass, labelClass } from "@/components/ui/Input";
 
 type Props = {
   initialCase?: Case | null;
-  /** Server action: (formData: FormData) => Promise<void>. Reads name="title", "description", "company_context", "policies", "id" (optional). */
   onSave: (formData: FormData) => Promise<void>;
-  /** When true, show brief "Saved" feedback (e.g. after redirect with ?saved=1). */
   saved?: boolean;
 };
-
-const inputClass =
-  "mt-2 w-full rounded-xl border border-brand-silver bg-brand-white px-3 py-2 text-sm text-brand-black placeholder:opacity-70 focus:ring-2 focus:ring-brand-coral focus:border-brand-coral focus:outline-none";
-const labelClass = "block text-sm font-medium text-brand-black";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -28,55 +23,77 @@ function SubmitButton() {
 
 export function CaseBuilder({ initialCase, onSave, saved = false }: Props) {
   return (
-    <form action={onSave} className="space-y-6">
+    <form action={onSave} className="space-y-8">
       {initialCase?.id && (
         <input type="hidden" name="id" value={initialCase.id} readOnly />
       )}
-      <div>
-        <label className={labelClass}>Title</label>
-        <input
-          className={inputClass}
-          name="title"
-          defaultValue={initialCase?.title ?? ""}
-          required
-        />
-      </div>
-      <div>
-        <label className={labelClass}>Description</label>
-        <textarea
-          className={inputClass}
-          name="description"
-          rows={3}
-          defaultValue={initialCase?.description ?? ""}
-          required
-        />
-      </div>
-      <div>
-        <label className={labelClass}>Company context</label>
-        <textarea
-          className={inputClass}
-          name="company_context"
-          rows={3}
-          defaultValue={initialCase?.company_context ?? ""}
-        />
-      </div>
-      <div>
-        <label className={labelClass}>Policies</label>
-        <textarea
-          className={inputClass}
-          name="policies"
-          rows={3}
-          defaultValue={initialCase?.policies ?? ""}
-        />
-        <p className="mt-1.5 text-xs text-brand-slate">
-          Freeform text. In future we can attach structured policy documents and
-          AI evaluation.
+
+      <section>
+        <h2 className="text-lg font-semibold text-brand-black">Scenario</h2>
+        <p className="mt-0.5 text-sm text-brand-slate/80">
+          Core case title and description for the candidate.
         </p>
-      </div>
-      <div className="flex flex-wrap items-center gap-3 pt-2">
+        <div className="mt-4 space-y-4">
+          <div>
+            <label className={labelClass}>Title</label>
+            <input
+              className={`mt-1.5 ${inputClass}`}
+              name="title"
+              defaultValue={initialCase?.title ?? ""}
+              required
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Description</label>
+            <textarea
+              className={`mt-1.5 ${inputClass}`}
+              name="description"
+              rows={3}
+              defaultValue={initialCase?.description ?? ""}
+              required
+            />
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-brand-black">
+          Company context
+        </h2>
+        <p className="mt-0.5 text-sm text-brand-slate/80">
+          Background the candidate should consider.
+        </p>
+        <div className="mt-4">
+          <label className={labelClass}>Context</label>
+          <textarea
+            className={`mt-1.5 ${inputClass}`}
+            name="company_context"
+            rows={3}
+            defaultValue={initialCase?.company_context ?? ""}
+          />
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-lg font-semibold text-brand-black">Policies</h2>
+        <p className="mt-0.5 text-sm text-brand-slate/80">
+          Guidelines and policies for handling the case.
+        </p>
+        <div className="mt-4">
+          <label className={labelClass}>Policy text</label>
+          <textarea
+            className={`mt-1.5 ${inputClass}`}
+            name="policies"
+            rows={4}
+            defaultValue={initialCase?.policies ?? ""}
+          />
+        </div>
+      </section>
+
+      <div className="flex flex-wrap items-center gap-3 border-t border-brand-silver/60 pt-6">
         <SubmitButton />
         {saved && (
-          <span className="text-sm font-medium text-brand-coral">Saved.</span>
+          <span className="text-sm font-medium text-brand-coral">Saved</span>
         )}
       </div>
     </form>
